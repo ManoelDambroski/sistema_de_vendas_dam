@@ -6,24 +6,24 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.dambroski.services.validation.ClienteEmail;
+import com.dambroski.services.validation.ClienteInsert;
 
 
 
+@ClienteInsert
 public class ClienteInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@NotEmpty(message = "O nome não pode ser vazio")
-	@Length(min=5, max=120, message = "O tamanho deve ser entre 5 e 120 caracteres")
+	@Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
 	private String nome;
 
-
-	
+	@ClienteEmail
 	private String email;
 
-	
 	private String cpfOuCnpj;
 
-	
 	private Integer tipo;
 
 	@NotEmpty(message = "Campo Obrigatório")
@@ -46,19 +46,14 @@ public class ClienteInsertDTO implements Serializable {
 	@NotEmpty
 	private String cep;
 
-	
 	private Integer cidadeId;
 
-	
 	public ClienteInsertDTO() {
 
 	}
-	
-	
 
-
-	public ClienteInsertDTO(String nome, String email, String cpfOuCnpj, Integer tipo,
-			String logradouro, String numero, String bairro, String cep, Integer cidadeId) {
+	public ClienteInsertDTO(String nome, String email, String cpfOuCnpj, Integer tipo, String logradouro, String numero,
+			String bairro, String cep, Integer cidadeId) {
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
@@ -174,6 +169,5 @@ public class ClienteInsertDTO implements Serializable {
 		this.cidadeId = cidadeId;
 	}
 
-	
-	}
+}
 	

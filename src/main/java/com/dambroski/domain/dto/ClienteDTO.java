@@ -8,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
 import com.dambroski.domain.Cliente;
+import com.dambroski.services.validation.ClienteEmail;
 
 
 
@@ -18,7 +19,7 @@ public class ClienteDTO implements Serializable {
 	@Pattern(regexp = "^\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}", message = "O campo deve conter um nome válido")
 	private String nome;
 
-
+	@ClienteEmail
 	private String email;
 
 	public ClienteDTO() {
