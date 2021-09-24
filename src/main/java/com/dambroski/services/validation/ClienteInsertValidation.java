@@ -6,11 +6,8 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.dambroski.domain.dto.ClienteInsertDTO;
 import com.dambroski.domain.enuns.TipoCliente;
-import com.dambroski.repositories.ClienteRepository;
 import com.dambroski.resources.exceptions.FieldMessage;
 import com.dambroski.services.validation.uttils.BR;
 
@@ -18,8 +15,7 @@ import com.dambroski.services.validation.uttils.BR;
 
 public class ClienteInsertValidation implements ConstraintValidator<ClienteInsert, ClienteInsertDTO> {
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+	
 
 	@Override
 	public void initialize(ClienteInsert ann) {
@@ -32,7 +28,7 @@ public class ClienteInsertValidation implements ConstraintValidator<ClienteInser
 
 		if (clienteInsertDTO.getTipo() == TipoCliente.PESSOAFISICA.getCod()
 				&& !BR.isValidCPF(clienteInsertDTO.getCpfOuCnpj())) {
-			erros.add(new FieldMessage("CpfOuCnpj", "CPF inválido"));
+			erros.add(new FieldMessage("CpfOuCnpj", "CPF inválido."));
 		}
 
 		if (clienteInsertDTO.getTipo() == TipoCliente.PESSOAJURIDICA.getCod()

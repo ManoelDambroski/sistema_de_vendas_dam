@@ -1,3 +1,4 @@
+
 package com.dambroski.services;
 
 import java.time.Instant;
@@ -15,7 +16,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.dambroski.domain.Pedido;
-
 
 
 public abstract class AbstractEmailService implements EmailService {
@@ -79,3 +79,4 @@ public abstract class AbstractEmailService implements EmailService {
 	}
 
 }
+
