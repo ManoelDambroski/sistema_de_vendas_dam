@@ -2,11 +2,14 @@ package com.dambroski.services;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ import com.dambroski.services.exceptions.EntitieNotFoundException;
 
 
 @Service
+
 public class PedidoService {
 
 	@Autowired
@@ -45,8 +49,13 @@ public class PedidoService {
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
 
+	@Autowired
+	private EmailService emailService;
 	
-
+	
+	@Autowired
+	private Environment environment;
+	
 
 	public Pedido findById(Integer id) {
 		Optional<Pedido> ped = pedidoRepository.findById(id);
@@ -87,10 +96,13 @@ public class PedidoService {
 		}
 
 		itemPedidoRepository.saveAll(pedido.getItens());
+		if(!Arrays.asList(environment.getActiveProfiles()).contains("test")) {
+			emailService.sendOrderConfimationHtmlEmail(pedido);
+		}
+		
 		
 		return pedido;
 
 	}
 
 }
-
