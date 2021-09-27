@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dambroski.domain.Cidade;
@@ -32,6 +33,10 @@ public class ClienteService {
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder BPC;
+	
 
 	public Cliente findById(Integer id) {
 		Optional<Cliente> cli = clienteRepository.findById(id);
@@ -63,7 +68,9 @@ public class ClienteService {
 
 	@Transactional
 	public Cliente insert(ClienteInsertDTO clienteInsertDTO) {
-
+	
+		clienteInsertDTO.setSenha(BPC.encode(clienteInsertDTO.getSenha()));
+		
 		Cliente cliente = new Cliente(clienteInsertDTO);
 
 		if (clienteInsertDTO.getTelefone1() != null) {
@@ -86,7 +93,8 @@ public class ClienteService {
 
 		endereco = enderecoRepository.save(endereco);
 		cliente.getEnderecos().add(endereco);
-
+	
+	
 		return cliente;
 
 	}

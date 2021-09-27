@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.Length;
 
 import com.dambroski.services.validation.ClienteEmail;
 import com.dambroski.services.validation.ClienteInsert;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 
@@ -15,6 +17,8 @@ import com.dambroski.services.validation.ClienteInsert;
 public class ClienteInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	
+	
 	@NotEmpty(message = "O nome não pode ser vazio")
 	@Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
 	private String nome;
@@ -25,6 +29,10 @@ public class ClienteInsertDTO implements Serializable {
 	private String cpfOuCnpj;
 
 	private Integer tipo;
+	
+	@NotEmpty(message = "Campo Obrigatório")
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private String senha;
 
 	@NotEmpty(message = "Campo Obrigatório")
 	private String telefone1;
@@ -52,8 +60,9 @@ public class ClienteInsertDTO implements Serializable {
 
 	}
 
-	public ClienteInsertDTO(String nome, String email, String cpfOuCnpj, Integer tipo, String logradouro, String numero,
-			String bairro, String cep, Integer cidadeId) {
+	public ClienteInsertDTO(String nome, String senha,  String email, String cpfOuCnpj, Integer tipo, 
+			String logradouro, String numero, String bairro, String cep, Integer cidadeId) {
+		this.senha = senha;
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
@@ -71,6 +80,14 @@ public class ClienteInsertDTO implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public String getEmail() {
