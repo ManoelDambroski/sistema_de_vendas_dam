@@ -15,8 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.dambroski.domain.dto.CredenciaisDTO;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -43,33 +41,26 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				
 				UsernamePasswordAuthenticationToken authToken = 
 						new UsernamePasswordAuthenticationToken(cr.getEmail(), cr.getSenha(), new ArrayList<>());
-				
-				Authentication auth = authenticationManager.authenticate(authToken);
+
+				return authenticationManager.authenticate(authToken);
 				
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			
-		
-		return null;
 	}
 
 	
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		super.successfulAuthentication(request, response, chain, authResult);
+		
+		String user = ((UserSS) authResult.getPrincipal()).getUsername();
+		String token = jwtUtil.generatedToken(user);
+		response.addHeader("Authorization", "Bearer" + token);
+		
 	}
 
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException failed) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		super.unsuccessfulAuthentication(request, response, failed);
-	}
 
-	
 	
 	
 	

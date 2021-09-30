@@ -10,36 +10,31 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.dambroski.domain.Cliente;
 
-public class UserSS implements UserDetails{
+public class UserSS implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
-	
 	private Integer id;
 	private String email;
 	private String senha;
-	private Collection<? extends GrantedAuthority>  authorities;
-	
+	private Collection<? extends GrantedAuthority> authorities;
+
 	public UserSS() {
-		
+
 	}
-	
-	
-	
+
 	public UserSS(Cliente cliente) {
-	
+
 		this.id = cliente.getId();
 		this.email = cliente.getEmail();
-		this.senha = cliente.getSenha();	
-		this.authorities = cliente.getPerfis().stream()
-			.map(x -> new SimpleGrantedAuthority(x.getDescricao())).collect(Collectors.toList());
+		this.senha = cliente.getSenha();
+		this.authorities = cliente.getPerfis().stream().map(x -> new SimpleGrantedAuthority(x.getDescricao()))
+				.collect(Collectors.toList());
 	}
-
-
 
 	public Integer getId() {
 		return id;
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;

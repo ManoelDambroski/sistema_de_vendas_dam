@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.dambroski.domain.Cliente;
 import com.dambroski.repositories.ClienteRepository;
 import com.dambroski.security.UserSS;
 
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	
@@ -24,7 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		return new UserSS(cliente);
 	}
 
-	
 	
 	
 	
