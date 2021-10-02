@@ -2,6 +2,7 @@ package com.dambroski.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -55,12 +56,28 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			Authentication authResult) throws IOException, ServletException {
 		
 		String user = ((UserSS) authResult.getPrincipal()).getUsername();
-		String token = jwtUtil.generatedToken(user);
-		response.addHeader("Authorization", "Bearer" + token);
+		String token = jwtUtil.generateToken(user);
+		response.addHeader("Authorization", "Bearer " + token);
 		
 	}
 
-
+	 private String json() {
+         long date = new Date().getTime();
+         return "{\"timestamp\": " + date + ", "
+             + "\"status\": 401, "
+             + "\"error\": \"Não autorizado\", "
+             + "\"message\": \"Email ou senha inválidos\", "
+             + "\"path\": \"/login\"}";
+     }
+	
+		 
+        @Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+        	 response.setStatus(401);
+             response.setContentType("application/json"); 
+             response.getWriter().append(json());
+	}
 	
 	
 	
