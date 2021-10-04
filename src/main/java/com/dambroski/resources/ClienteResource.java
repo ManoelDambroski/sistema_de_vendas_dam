@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,12 +40,14 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(cli);
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/todos")
-	public Page<ClienteDTO> findByPage(@RequestParam(name = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ClienteDTO>> findByPage(@RequestParam(name = "page", defaultValue = "0") Integer page,
 			@RequestParam(name = "size", defaultValue = "4") Integer size,
 			@RequestParam(name = "direction", defaultValue = "ASC") String direction,
 			@RequestParam(name = "orderBy", defaultValue = "nome") String orderBy) {
-		return clienteService.findAll(page, size, direction, orderBy);
+		Page<ClienteDTO> pageC = clienteService.findAll(page, size, direction, orderBy);
+		return ResponseEntity.ok().body(pageC);
 	}
 
 	@PutMapping("/{id}")
@@ -61,6 +64,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		clienteService.delete(id);

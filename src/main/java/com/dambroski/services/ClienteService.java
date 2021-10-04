@@ -18,8 +18,11 @@ import com.dambroski.domain.Cliente;
 import com.dambroski.domain.Endereco;
 import com.dambroski.domain.dto.ClienteDTO;
 import com.dambroski.domain.dto.ClienteInsertDTO;
+import com.dambroski.domain.enuns.Perfil;
 import com.dambroski.repositories.ClienteRepository;
 import com.dambroski.repositories.EnderecoRepository;
+import com.dambroski.security.UserSS;
+import com.dambroski.services.exceptions.AuthorizationException;
 import com.dambroski.services.exceptions.DataIntegrityException;
 import com.dambroski.services.exceptions.EntitieNotFoundException;
 
@@ -39,6 +42,13 @@ public class ClienteService {
 	
 
 	public Cliente findById(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+	
+		if(user == null || !user.hasRole(Perfil.ADMIN)  && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> cli = clienteRepository.findById(id);
 		return cli.orElseThrow(() -> new EntitieNotFoundException("Cliente não encontrado"));
 	}

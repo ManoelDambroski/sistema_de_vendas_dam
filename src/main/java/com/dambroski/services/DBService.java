@@ -194,6 +194,7 @@ public class DBService {
 
 		Cliente cli1 = new Cliente("Maria Silva",BPC.encode("4455hhr"),  "dambroskitestedev@gmail.com", "90281220018",
 				TipoCliente.PESSOAFISICA);
+		cli1.addPerfil(Perfil.ADMIN);
 		
 
 		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
@@ -222,7 +223,7 @@ public class DBService {
 		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
 		Pedido ped1 = new Pedido(Instant.now(), cli1, e1);
-		Pedido ped2 = new Pedido(Instant.now(), cli1, e2);
+		Pedido ped2 = new Pedido(Instant.now(), cli2, e3);
 
 		Pagamento pagto1 = new PagamentoComCartao(EstadoPagamento.QUITADO, ped1, 6);
 		ped1.setPagamento(pagto1);
@@ -230,12 +231,8 @@ public class DBService {
 		Pagamento pagto2 = new PagamentoComBoleto(EstadoPagamento.PENDENTE, ped2, ped2.getInstant(), null);
 		ped2.setPagamento(pagto2);
 
-		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
-
-		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
-		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
-
-		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		cli1.getPedidos().addAll(Arrays.asList(ped1));
+		cli2.getPedidos().addAll(Arrays.asList(ped2));
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));

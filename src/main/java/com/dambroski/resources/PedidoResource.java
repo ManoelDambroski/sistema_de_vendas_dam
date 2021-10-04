@@ -36,7 +36,7 @@ public class PedidoResource {
 	}
 
 	@GetMapping
-	public Page<Pedido> findByCliente(@RequestParam(name = "nome", defaultValue = "") String nome,
+	public ResponseEntity<Page<Pedido>> findByCliente(@RequestParam(name = "nome", defaultValue = "") String nome,
 			@RequestParam(name = "page", defaultValue = "0") Integer page,
 			@RequestParam(name = "size", defaultValue = "4") Integer size,
 			@RequestParam(name = "direction", defaultValue = "ASC") String direction,
@@ -44,9 +44,22 @@ public class PedidoResource {
 
 		Pageable pageble = PageRequest.of(page, size, Direction.fromString(direction), orderBy);
 		Page<Pedido> pedidos = pedidoService.findByCliente(nome, pageble);
-		return pedidos;
+		return ResponseEntity.ok().body(pedidos);
 
 	}
+	
+	@GetMapping("/todos")
+	public ResponseEntity<Page<Pedido>> findPage(
+			@RequestParam(name = "page", defaultValue = "0") Integer page,
+			@RequestParam(name = "size", defaultValue = "4") Integer size,
+			@RequestParam(name = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(name = "orderBy", defaultValue = "id") String orderBy){
+		Pageable pageble = PageRequest.of(page, size, Direction.fromString(direction), orderBy);
+		Page<Pedido> pagePed = pedidoService.findPage(pageble);
+		return ResponseEntity.ok().body(pagePed);
+		
+	}
+	
 
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody Pedido pedido) {

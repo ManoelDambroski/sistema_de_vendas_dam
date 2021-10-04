@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,19 +41,18 @@ public class CategoriaResource {
 		return categoriaService.findByPage(page, linesPerPage, orderBy, direction);
 
 	}
-
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll() {
 		List<CategoriaDTO> catsDTO = categoriaService.findAll();
 		return ResponseEntity.ok().body(catsDTO);
 	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> findById(@PathVariable Integer id) {
 		Categoria cat = categoriaService.findById(id);
 		return ResponseEntity.ok().body(cat);
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Categoria categoria) {
 		Categoria cat = categoriaService.insert(categoria);

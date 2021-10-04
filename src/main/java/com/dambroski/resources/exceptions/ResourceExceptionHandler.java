@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.dambroski.services.exceptions.AuthorizationException;
 import com.dambroski.services.exceptions.DataIntegrityException;
 import com.dambroski.services.exceptions.EntitieNotFoundException;
 
@@ -55,4 +56,18 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request){
+		StandardError er = new StandardError();
+		er.setError("Authorization exception");
+		er.setMessage(e.getMessage());
+		er.setPath(request.getRequestURI());
+		er.setStatus(HttpStatus.FORBIDDEN.value());
+		er.setTimestamp(Instant.now());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(er);
+	}
+	
+	
+	
 }

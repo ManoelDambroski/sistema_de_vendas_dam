@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.dambroski.domain.Cliente;
+import com.dambroski.domain.enuns.Perfil;
 
 public class UserSS implements UserDetails {
 	private static final long serialVersionUID = 1L;
@@ -69,4 +70,10 @@ public class UserSS implements UserDetails {
 		return true;
 	}
 
+	public boolean hasRole(Perfil perfil) {
+		return authorities.contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
+
+	
+	
 }

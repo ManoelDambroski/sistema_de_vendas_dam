@@ -3,6 +3,7 @@ package com.dambroski.services;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -19,10 +20,13 @@ import com.dambroski.domain.ItemPedido;
 import com.dambroski.domain.PagamentoComBoleto;
 import com.dambroski.domain.Pedido;
 import com.dambroski.domain.enuns.EstadoPagamento;
+import com.dambroski.domain.enuns.Perfil;
 import com.dambroski.repositories.ClienteRepository;
 import com.dambroski.repositories.ItemPedidoRepository;
 import com.dambroski.repositories.PagamentoRepository;
 import com.dambroski.repositories.PedidoRepository;
+import com.dambroski.security.UserSS;
+import com.dambroski.services.exceptions.AuthorizationException;
 import com.dambroski.services.exceptions.EntitieNotFoundException;
 
 
@@ -58,16 +62,28 @@ public class PedidoService {
 	
 
 	public Pedido findById(Integer id) {
+		
 		Optional<Pedido> ped = pedidoRepository.findById(id);
+		
 		return ped.orElseThrow(() -> new EntitieNotFoundException("Pedido não encontrado ID: " + id));
 	}
+	
 
 	public Page<Pedido> findByCliente(String nome, Pageable pageable) {
 		Cliente cliente = clienteRepository.findByNomeContainingIgnoreCase(nome);
 		Page<Pedido> pedidos = pedidoRepository.findByCliente(cliente, pageable);
 		return pedidos;
 	}
-
+	
+	public Page<Pedido> findPage(Pageable pageable){
+		UserSS user = UserService.authenticated();
+		if(user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Cliente cliente  = clienteService.findById(user.getId());
+		return pedidoRepository.findByCliente(cliente, pageable);	
+	}
+	
 	@Transactional
 	public Pedido insert(Pedido pedido) {
 		Cliente cliente = clienteService.findById(pedido.getCliente().getId());
